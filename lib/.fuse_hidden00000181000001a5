@@ -96,9 +96,7 @@ class SQLObject
   end
 
   def attribute_values
-    self.class.columns.map do |column|
-      self.send(column)
-    end
+    attributes.values
   end
 
   def insert
@@ -112,8 +110,8 @@ class SQLObject
                       .length
     question_marks = (["?"] * num_of_columns).join(", ")
 
-    updated_attributes = attribute_values.drop(1)
-    DBConnection.execute2(<<-SQL, *updated_attributes)
+
+    DBConnection.execute2(<<-SQL, *attribute_values)
       INSERT INTO
         #{self.class.table_name} (#{column_names})
       VALUES
@@ -130,7 +128,6 @@ class SQLObject
                       .drop(1)
                       .map { |elem| elem.to_s + (" = ?")}.join(", ")
     updated_attributes = attribute_values.drop(1)
-
     DBConnection.execute2(<<-SQL, *updated_attributes)
       UPDATE
         #{self.class.table_name}

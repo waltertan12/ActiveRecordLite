@@ -10,17 +10,20 @@ class AssocOptions
   )
 
   def model_class
-    # ...
+    "#{class_name}".singularize
   end
 
   def table_name
-    # ...
+    "#{foreign_key}".tableize
   end
 end
 
 class BelongsToOptions < AssocOptions
   def initialize(name, options = {})
-    # ...
+
+    @foreign_key = options[:foreign_key] || "#{name.singularize}_id".to_sym
+    @primary_key = options[:primary_key] || :id 
+    @class_name  = options[:class_name]  || "#{name.capitalize}"
   end
 end
 
