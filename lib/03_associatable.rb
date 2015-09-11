@@ -54,8 +54,9 @@ module Associatable
     klass = options.model_class
 
     define_method(name) do
+      foreign_key = options.foreign_key
       key_value = send(options.primary_key)
-      klass.where({options.foreign_key => key_value})
+      klass.where(foreign_key => key_value)
     end
   end
 
