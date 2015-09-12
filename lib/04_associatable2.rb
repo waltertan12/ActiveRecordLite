@@ -20,7 +20,6 @@ module Associatable
       final_key   = source_options.foreign_key
       final_id   = join_object.send(final_key)
 
-
       final_klass.where({id: final_id}).first
     end
   end

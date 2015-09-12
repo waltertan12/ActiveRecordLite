@@ -21,10 +21,7 @@ module Searchable
         #{attributes_string}
     SQL
 
-
-    found_items.drop(1).map do |found_item|
-      self.new(found_item)
-    end
+    parse_all(found_items.drop(1))
   end
 end
 
