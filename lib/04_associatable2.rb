@@ -18,9 +18,31 @@ module Associatable
 
       final_klass = source_options.model_class
       final_key   = source_options.foreign_key
-      final_id   = join_object.send(final_key)
+      final_col   = source_options.primary_key
+      final_id    = join_object.send(final_key)
 
-      final_klass.where({id: final_id}).first
+      final_klass.where({ final_col => final_id }).first
     end
   end
+
+  # def has_many_through(name, through_name, source_name)
+  #   through_options = self.assoc_options[through_name]
+
+  #   define_method(name) do
+  #     source_options  = 
+  #       through_options.model_class.assoc_options[source_name]
+      
+  #     join_klass  = through_options.model_class
+  #     join_key    = through_options.foreign_key
+  #     join_id     = self.send(join_key)
+  #     join_object = join_klass.find(join_id)
+
+  #     final_klass = source_options.model_class
+  #     final_key   = source_options.foreign_key
+  #     final_col   = source_options.primary_key
+  #     final_id    = join_object.send(final_key)
+
+  #     final_klass.where({ final_col => final_id })
+  #   end
+  # end
 end
