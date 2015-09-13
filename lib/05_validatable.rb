@@ -55,7 +55,7 @@ module ValidatableInstance
         if self.class.valid?(self)
           super
         else
-          puts "FAWKKKKKKk NOT VaLiD bRoOo!1"
+          # puts "FAWKKKKKKk NOT VaLiD bRoOo!1"
           false
         end
       end
