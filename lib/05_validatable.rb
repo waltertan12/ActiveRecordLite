@@ -1,15 +1,16 @@
 require_relative '01_sql_object'
 
 module Validatable
-  # Check which columns to validate
   def validates(column, options = {})
     @to_validate = {} if @to_validate.nil?
     @to_validate[column] = options
   end
 
   def valid?(object)
+    return true if @to_validate.nil?
     @to_validate.all? do |column, validation|
       instance_value = object.send(column)
+
 
       if !validation[:presence].nil?
         validation[:presence] == !instance_value.nil?
@@ -38,14 +39,17 @@ module Validatable
 end
 
 module ValidatableInstance
-
+  # Overwrite instance method #save
   def self.included(base)
     base.class_eval do
       def save
         if self.class.valid?(self)
-          super
+          if id
+            update
+          else
+            insert
+          end
         else
-          # puts "FAWKKKKKKk NOT VaLiD bRoOo!1"
           false
         end
       end
