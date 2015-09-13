@@ -1,17 +1,7 @@
 require_relative '01_sql_object'
 
 module Validatable
-  # validate presence
-  # def validates_presence(column, attribute)
-    #             presence: true   ==  NOT column is not nil -> NOT FALSE
-    #             presence: true   ==  NOT column is nil     -> NOT TRUE
-    #             presence: false  ==  NOT column is not nil -> NOT FALSE
-    #             presence: false  ==  NOT column is nil     -> NOT TRUE
-  #   return if attribute[:presence] == !self.send(column).nil?
-  #   raise "#{column} cannot be empty"
-  # end
-
-  # check which columns to validate
+  # Check which columns to validate
   def validates(column, options = {})
     @to_validate = {} if @to_validate.nil?
     @to_validate[column] = options
@@ -35,11 +25,11 @@ module Validatable
 
         case check
         when :maximum
-          instance_value.length < param
+          instance_value.length <  param
         when :minimum
           instance_value.length >= param
         when :in
-          instance_value.length < param.max &&
+          instance_value.length <  param.max &&
           instance_value.length >= param.min
         end
       end
