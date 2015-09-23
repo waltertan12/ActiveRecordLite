@@ -44,6 +44,25 @@ describe 'Validatable' do
         c = Cat.new(name: "Breakfast")
         expect(Cat.valid?(c)).to eq(false)
       end
+
+      it "should check multiple options" do
+        class Cat
+          validates(
+            :name,
+            {
+              presence: true,
+              length: {in: 5..7},
+              uniqueness: true
+            }
+          )
+        end
+        c = Cat.new(name: "sixlet")
+        b = Cat.new(name: "Breakfast")
+        d = Cat.new(name: "fivel")
+        expect(Cat.valid?(c)).to eq(true)
+        expect(Cat.valid?(b)).to eq(false)
+        expect(Cat.valid?(d)).to eq(false)
+      end
     end
 
     it "should automatically run on save" do

@@ -52,6 +52,7 @@ module Associatable
   def has_many(name, options = {})
     options = HasManyOptions.new(name, self, options)
     klass = options.model_class
+    self.assoc_options[name] = options
 
     define_method(name) do
       foreign_key = options.foreign_key
