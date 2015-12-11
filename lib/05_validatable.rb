@@ -1,4 +1,5 @@
 require_relative '01_sql_object'
+require 'set'
 
 module Validatable
   def validates(column, options = {})
@@ -11,29 +12,39 @@ module Validatable
     @to_validate.all? do |column, validation|
       instance_value = object.send(column)
 
+      valid = true
 
       if !validation[:presence].nil?
-        validation[:presence] == !instance_value.nil?
-      elsif !validation[:uniquness].nil?
+        valid &= validation[:presence] == !instance_value.nil?
+      end
+      if !validation[:uniqueness].nil?
         all_instances = self.all
+        values = Set.new
 
         all_instances.all? do |instance|
-          instance_value = instance.send(column)
-        end
-      elsif !validation[:length].nil?
-        check = validation[:length].first[0]
-        param = validation[:length][check]
-
-        case check
-        when :maximum
-          instance_value.length <  param
-        when :minimum
-          instance_value.length >= param
-        when :in
-          instance_value.length <  param.max &&
-          instance_value.length >= param.min
+          valid &= !values.add?(instance.send(column)).nil? && 
+          instance_value != instance.send(column)
         end
       end
+      if !validation[:length].nil?
+        validation[:length].each do |len_validation|
+
+          check = len_validation[0]
+          param = validation[:length][check]
+
+          case check
+          when :max
+            valid &= instance_value.length <  param
+          when :min
+            valid &= instance_value.length >= param
+          when :in
+            valid &= instance_value.length <  param.max &&
+            instance_value.length >= param.min
+          end
+        end
+      end
+
+      valid
     end
   end
 end
